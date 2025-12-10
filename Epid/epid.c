@@ -6,16 +6,6 @@
 #include <time.h>
 #include <stdlib.h>
 
-// Mainfunktion
-int main(void)
-{
-    srand((unsigned int)time(NULL));
-
-    brugerInput();
-
-    return 0;
-}
-
 // Brugermenu
 void brugerInput()
 {
