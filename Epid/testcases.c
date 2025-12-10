@@ -89,7 +89,7 @@ void vaccine_effekt_1(CuTest *tc)
     // forventning
     CuAssertTrue(tc, Imax_med < Imax_uden); // forventer at Imax_uden er større end Imax_med
 }
-
+// testsuite af testcases af vaccineeffekt
 CuSuite *vaccine_udrulning_suite(void)
 {
     CuSuite *suite = CuSuiteNew();
@@ -98,9 +98,6 @@ CuSuite *vaccine_udrulning_suite(void)
     return suite;
 }
 /*
-// testsuite af testcases af vaccineeffekt
-
-
 // testcases af migrations effekt  ( lukket grænse = 0) (1 by uden smittede, får overførst smitte fra anden by)
 
 // testsuite af testcases af migrations effekt
