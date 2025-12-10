@@ -21,6 +21,7 @@ void vaccine_effekt_1(CuTest *tc)
 {
 
     SEIHRS_model tekstfil[2];
+    SEIHRS_model tekstfil_orig[2];
 
     FILE *testfile = fopen("test_output.txt", "w");
 
