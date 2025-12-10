@@ -134,6 +134,9 @@ void simulerEpidemi(SEIHRS_model *tekstfil_orig, int model_type, int use_app, in
     double Imax1 = 0.0;
     double Imax2 = 0.0;
 
+    double Hmax1 = 0.0;
+    double Hmax2 = 0.0;
+
     // Simulering (tids-loop)
     for (int n = 0; n < tekstfil[0].dage; n++)
     {
@@ -504,6 +507,12 @@ void simulerEpidemi(SEIHRS_model *tekstfil_orig, int model_type, int use_app, in
         if (valg_input == 2 && sum_I_input_2 > Imax2)
             Imax2 = sum_I_input_2;
 
+        if (sum_H_input_1 > Hmax1)
+            Hmax1 = sum_H_input_1;
+
+        if (valg_input == 2 && sum_H_input_2 > Hmax2)
+            Hmax2 = sum_H_input_2;
+
         // Udskriv værdier (dag for dag)
         if (model_type == 1) // sir
         {
@@ -558,6 +567,8 @@ void simulerEpidemi(SEIHRS_model *tekstfil_orig, int model_type, int use_app, in
         }
     }
     fprintf(file, "Imax1: %.6f\n", Imax1);
+
+    fprintf(file, "Hmax1: %.6f\n", Hmax1);
 
     if (file != NULL)
     {
