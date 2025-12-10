@@ -3,51 +3,77 @@
 #include "CuTest.h"
 #include "epid.h"
 
-// funktionsprototype
-
-void simulerEpidemi(
-    SEIHRS_model *,
-    int model_type,
-    int use_app,
-    int use_vaccine,
-    int valg_input,
-    FILE *file,
-    int replicate_num,
-    int is_stochastic,
-    int print_to_terminal);
-
-// testcase 1 af vaccine funktion (vaccine til)
+// testcase 1 af vaccine funktion (vaccine til sammenlignet med vaccine fra)
 void vaccine_effekt_1(CuTest *tc)
 {
+    // Arrange - sætter testen op med det den skal bruge
 
     SEIHRS_model tekstfil[2];
     SEIHRS_model tekstfil_orig[2];
 
-    FILE *testfile = fopen("test_output.txt", "w");
+    // Indlæser KBH.txt én gang
+    FILE *input = fopen("KBH.txt", "r");
+    CuAssertPtrNotNull(tc, input);
 
+    tekstfil[0] = indlaasFil(input);
+    tekstfil_orig[0] = tekstfil[0];
+    fclose(input);
+
+    // Kopiér data til sammenligning (uden vaccine)
+    tekstfil[1] = tekstfil[0];
+    tekstfil_orig[1] = tekstfil[0];
+
+    FILE *testfile1 = fopen("test_output1.txt", "w");
+    FILE *testfile2 = fopen("test_output2.txt", "w");
+
+    CuAssertPtrNotNull(tc, testfile1);
+    CuAssertPtrNotNull(tc, testfile2);
+
+    // Act - kalder den funktion der skal testet
     simulerEpidemi(
-        &tekstfil[1],
+        &tekstfil[0],
         1, // SIR
         0, // ingen app
         1, // vaccine til
         1, // inputfil 1
-        testfile,
+        testfile1,
+        1, // 1 simulering
+        0, // deterministisk
+        0  // ingen terminalprint
+    );
+    simulerEpidemi(
+        &tekstfil[1],
+        1, // SIR
+        0, // ingen app
+        0, // vaccine fra
+        1, // inputfil 1
+        testfile2,
         1, // 1 simulering
         0, // deterministisk
         0  // ingen terminalprint
     );
 
-    fclose(testfile);
+    fclose(testfile1);
+    fclose(testfile2);
 
-    // Nu åbner vi filen igen og tjekker resultatet
-    testfile = fopen("test_output.txt", "r");
+    // Assert - Nu åbner vi filen igen og tjekker resultatet
+    testfile1 = fopen("test_output1.txt", "r");
+    testfile2 = fopen("test_output2.txt", "r");
 
-    double Imax;
-    fscanf(testfile, "%lf", &Imax);
+    CuAssertPtrNotNull(tc, testfile1);
+    CuAssertPtrNotNull(tc, testfile2);
 
-    fclose(testfile);
+    double Imax_med = 0.0;
+    double Imax_uden = 0.0;
 
-    CuAssertTrue(tc, Imax < 0.2); // fx forventet lav smittetop
+    fscanf(testfile1, "%lf", &Imax_med);
+    fscanf(testfile2, "%lf", &Imax_uden);
+
+    fclose(testfile1);
+    fclose(testfile2);
+
+    // forventning
+    CuAssertTrue(tc, Imax_med < Imax_uden); // forventer at Imax_uden er større end Imax_med
 }
 
 CuSuite *vaccine_udrulning_suite(void)
@@ -57,38 +83,7 @@ CuSuite *vaccine_udrulning_suite(void)
 
     return suite;
 }
-
 /*
-// testcase 2 af vaccine funktion (ingen er vaccinerede)
-void vaccine_effekt_2(CuTest *tc)
-{
-    FILE *testfile = fopen("test_output.txt", "w");
-
-    simulerEpidemi(
-        1, // SEIR
-        0, // ingen app
-
-        0, // ingen vaccine
-        1, // inputfil 1
-        testfile,
-        1, // 1 simulering
-        0, // deterministisk
-        0  // ingen terminalprint
-    );
-
-    fclose(testfile);
-
-    // Nu åbner vi filen igen og tjekker resultatet
-    testfile = fopen("test_output.txt", "r");
-
-    double Imax;
-    fscanf(testfile, "%lf", &Imax);
-
-    fclose(testfile);
-
-    CuAssertTrue(tc, Imax > 0.2); // fx forventet høj smittetop
-}
-
 // testsuite af testcases af vaccineeffekt
 
 

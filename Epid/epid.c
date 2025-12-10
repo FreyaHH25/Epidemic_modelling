@@ -6,11 +6,6 @@
 #include <time.h>
 #include <stdlib.h>
 
-
-
-
-
-
 // Mainfunktion
 int main(void)
 {
@@ -120,7 +115,7 @@ void brugerInput()
             return;
         }
 
-        simulerEpidemi(tekstfil_orig,model_type, use_app, use_vaccine, valg_input, output_fil, 0, 0, 1);
+        simulerEpidemi(tekstfil_orig, model_type, use_app, use_vaccine, valg_input, output_fil, 0, 0, 1);
 
         fclose(output_fil);
 
@@ -146,7 +141,7 @@ void brugerInput()
         int use_app = 0, use_vaccine = 0;
         appOgVaccine(&use_app, &use_vaccine);
 
-        koerFlereKopier(tekstfil_orig,model_type, use_app, use_vaccine, numReplicates, valg_input);
+        koerFlereKopier(tekstfil_orig, model_type, use_app, use_vaccine, numReplicates, valg_input);
 
         printf("Simuleringen er færdig. Data er gemt i stochastic_replicates.txt\n");
     }
@@ -208,9 +203,8 @@ void appOgVaccine(int *use_app, int *use_vaccine)
     *use_vaccine = (vaccine == 'j' || vaccine == 'J') ? 1 : 0;
 }
 
-
 // Kører flere kopier
-void koerFlereKopier(SEIHRS_model* org,int model_type, int use_app, int use_vaccine, int numReplicates, int valg_input)
+void koerFlereKopier(SEIHRS_model *org, int model_type, int use_app, int use_vaccine, int numReplicates, int valg_input)
 {
     FILE *file = fopen("stochastic_replicates.txt", "w");
     if (!file)
@@ -225,7 +219,7 @@ void koerFlereKopier(SEIHRS_model* org,int model_type, int use_app, int use_vacc
     {
         // reset sker allerede i simulerEpidemi
         printf("Replicate %d/%d\n", rep + 1, numReplicates);
-        simulerEpidemi(org,model_type, use_app, use_vaccine, valg_input, file, rep, 1, 1);
+        simulerEpidemi(org, model_type, use_app, use_vaccine, valg_input, file, rep, 1, 1);
     }
 
     fclose(file);
@@ -580,4 +574,3 @@ void lavEnkeltGnuplotScript(const char *scriptFile, const char *dataFile, int mo
 
     fclose(fp);
 }
-
