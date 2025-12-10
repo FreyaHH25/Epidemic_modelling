@@ -66,8 +66,22 @@ void vaccine_effekt_1(CuTest *tc)
     double Imax_med = 0.0;
     double Imax_uden = 0.0;
 
-    fscanf(testfile1, "%lf", &Imax_med);
-    fscanf(testfile2, "%lf", &Imax_uden);
+    char line[256];
+    Imax_med = -1;
+
+    while (fgets(line, sizeof(line), testfile1))
+    {
+        if (sscanf(line, "Imax1: %lf", &Imax_med) == 1)
+            break;
+    }
+
+    Imax_uden = -1;
+
+    while (fgets(line, sizeof(line), testfile2))
+    {
+        if (sscanf(line, "Imax1: %lf", &Imax_uden) == 1)
+            break;
+    }
 
     fclose(testfile1);
     fclose(testfile2);

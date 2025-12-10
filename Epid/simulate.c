@@ -10,9 +10,8 @@
 // Antal sub-steps pr. dag for den stokastiske simulering
 #define STEPS_PER_DAY 10
 
-
-//extern SEIHRS_model tekstfil[2];
-//extern SEIHRS_model tekstfil_orig[2];
+// extern SEIHRS_model tekstfil[2];
+// extern SEIHRS_model tekstfil_orig[2];
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
@@ -47,10 +46,10 @@ long poisson(double lambda)
 }
 
 // Hovedsimulering for én eller begge filer
-void simulerEpidemi(SEIHRS_model* tekstfil_orig,int model_type, int use_app, int use_vaccine, int valg_input, FILE *file, int replicate_num, int is_stochastic, int print_to_terminal)
+void simulerEpidemi(SEIHRS_model *tekstfil_orig, int model_type, int use_app, int use_vaccine, int valg_input, FILE *file, int replicate_num, int is_stochastic, int print_to_terminal)
 {
-  SEIHRS_model tekstfil[2];
-  
+    SEIHRS_model tekstfil[2];
+
     tekstfil[0] = tekstfil_orig[0];
     if (valg_input == 2)
         tekstfil[1] = tekstfil_orig[1];
@@ -131,6 +130,9 @@ void simulerEpidemi(SEIHRS_model* tekstfil_orig,int model_type, int use_app, int
         else if (valg_input == 2)
             fprintf(file, "# Replicate %d - Both\n", replicate_num);
     }
+
+    double Imax1 = 0.0;
+    double Imax2 = 0.0;
 
     // Simulering (tids-loop)
     for (int n = 0; n < tekstfil[0].dage; n++)
@@ -496,15 +498,21 @@ void simulerEpidemi(SEIHRS_model* tekstfil_orig,int model_type, int use_app, int
             sum_H_input_2 += H_input_2[i];
         }
 
+        if (sum_I_input_1 > Imax1)
+            Imax1 = sum_I_input_1;
+
+        if (valg_input == 2 && sum_I_input_2 > Imax2)
+            Imax2 = sum_I_input_2;
+
         // Udskriv værdier (dag for dag)
         if (model_type == 1) // sir
         {
             if (print_to_terminal)
             {
                 if (valg_input == 1)
-                    printf("Day %d | Input 1:(S=%.0f,I=%.0f,R=%.0f)\n", n, sum_S_input_1, sum_I_input_1, sum_R_input_1);
+                    printf("Day %d | Input 1:(S=%.0f,I=%.0f,R=%.0f, Imax1 = %.0f)\n", n, sum_S_input_1, sum_I_input_1, sum_R_input_1, Imax1);
                 else if (valg_input == 2)
-                    printf("Day %d | Input 1:(S=%.0f, I=%.0f, R=%.0f) Input 2: (S=%.0f, I=%.0f, R=%.0f)\n", n, sum_S_input_1, sum_I_input_1, sum_R_input_1, sum_S_input_2, sum_I_input_2, sum_R_input_2);
+                    printf("Day %d | Input 1:(S=%.0f, I=%.0f, R=%.0f, Imax1 = %.0f) Input 2: (S=%.0f, I=%.0f, R=%.0f, Imax2 = %.0f)\n", n, sum_S_input_1, sum_I_input_1, sum_R_input_1, Imax1, sum_S_input_2, sum_I_input_2, sum_R_input_2, Imax2);
             }
 
             if (file != NULL)
@@ -519,9 +527,9 @@ void simulerEpidemi(SEIHRS_model* tekstfil_orig,int model_type, int use_app, int
             if (print_to_terminal)
             {
                 if (valg_input == 1)
-                    printf("Day %d | Input 1:(S=%.0f, E=%.0f, I=%.0f,R=%.0f)\n", n, sum_S_input_1, sum_E_input_1, sum_I_input_1, sum_R_input_1);
+                    printf("Day %d | Input 1:(S=%.0f, E=%.0f, I=%.0f,R=%.0f, Imax1 = %.0f)\n", n, sum_S_input_1, sum_E_input_1, sum_I_input_1, sum_R_input_1, Imax1);
                 else if (valg_input == 2)
-                    printf("Day %d | Input 1:(S=%.0f, E=%.0f, I=%.0f, R=%.0f) Input 2: (S=%.0f, E=%.0f, I=%.0f, R=%.0f)\n", n, sum_S_input_1, sum_E_input_1, sum_I_input_1, sum_R_input_1, sum_S_input_2, sum_E_input_2, sum_I_input_2, sum_R_input_2);
+                    printf("Day %d | Input 1:(S=%.0f, E=%.0f, I=%.0f, R=%.0f, Imax1 = %.0f) Input 2: (S=%.0f, E=%.0f, I=%.0f, R=%.0f, Imax2 = %.0f)\n", n, sum_S_input_1, sum_E_input_1, sum_I_input_1, sum_R_input_1, Imax1, sum_S_input_2, sum_E_input_2, sum_I_input_2, sum_R_input_2, Imax2);
             }
 
             if (file != NULL)
@@ -536,9 +544,9 @@ void simulerEpidemi(SEIHRS_model* tekstfil_orig,int model_type, int use_app, int
             if (print_to_terminal)
             {
                 if (valg_input == 1)
-                    printf("Day %d | Input 1:(S=%.0f, E=%.0f, I=%.0f, H=%.0f, R=%.0f)\n", n, sum_S_input_1, sum_E_input_1, sum_I_input_1, sum_H_input_1, sum_R_input_1);
+                    printf("Day %d | Input 1:(S=%.0f, E=%.0f, I=%.0f, H=%.0f, R=%.0f, Imax1 = %.0f )\n", n, sum_S_input_1, sum_E_input_1, sum_I_input_1, sum_H_input_1, sum_R_input_1, Imax1);
                 else if (valg_input == 2)
-                    printf("Day %d | Input 1:(S=%.0f, E=%.0f, I=%.0f, H=%.0f, R=%.0f) Input 2: (S=%.0f, E=%.0f, I=%.0f, H=%.0f, R=%.0f)\n", n, sum_S_input_1, sum_E_input_1, sum_I_input_1, sum_H_input_1, sum_R_input_1, sum_S_input_2, sum_E_input_2, sum_I_input_2, sum_H_input_2, sum_R_input_2);
+                    printf("Day %d | Input 1:(S=%.0f, E=%.0f, I=%.0f, H=%.0f, R=%.0f, Imax1 = %.0f) Input 2: (S=%.0f, E=%.0f, I=%.0f, H=%.0f, R=%.0f, Imax2 = %.0f)\n", n, sum_S_input_1, sum_E_input_1, sum_I_input_1, sum_H_input_1, sum_R_input_1, Imax1, sum_S_input_2, sum_E_input_2, sum_I_input_2, sum_H_input_2, sum_R_input_2, Imax2);
             }
 
             if (file != NULL)
@@ -549,6 +557,7 @@ void simulerEpidemi(SEIHRS_model* tekstfil_orig,int model_type, int use_app, int
             }
         }
     }
+    fprintf(file, "Imax1: %.6f\n", Imax1);
 
     if (file != NULL)
     {
