@@ -553,9 +553,9 @@ void simulerEpidemi(SEIHRS_model *tekstfil_orig, int model_type, int use_app, in
             if (print_to_terminal)
             {
                 if (valg_input == 1)
-                    printf("Day %d | Input 1:(S=%.0f, E=%.0f, I=%.0f, H=%.0f, R=%.0f, Imax1 = %.0f )\n", n, sum_S_input_1, sum_E_input_1, sum_I_input_1, sum_H_input_1, sum_R_input_1, Imax1);
+                    printf("Day %d | Input 1:(S=%.0f, E=%.0f, I=%.0f, H=%.0f, R=%.0f, Hmax1 = %.0f )\n", n, sum_S_input_1, sum_E_input_1, sum_I_input_1, sum_H_input_1, sum_R_input_1, Hmax1);
                 else if (valg_input == 2)
-                    printf("Day %d | Input 1:(S=%.0f, E=%.0f, I=%.0f, H=%.0f, R=%.0f, Imax1 = %.0f) Input 2: (S=%.0f, E=%.0f, I=%.0f, H=%.0f, R=%.0f, Imax2 = %.0f)\n", n, sum_S_input_1, sum_E_input_1, sum_I_input_1, sum_H_input_1, sum_R_input_1, Imax1, sum_S_input_2, sum_E_input_2, sum_I_input_2, sum_H_input_2, sum_R_input_2, Imax2);
+                    printf("Day %d | Input 1:(S=%.0f, E=%.0f, I=%.0f, H=%.0f, R=%.0f, Hmax1 = %.0f) Input 2: (S=%.0f, E=%.0f, I=%.0f, H=%.0f, R=%.0f, Hmax2 = %.0f)\n", n, sum_S_input_1, sum_E_input_1, sum_I_input_1, sum_H_input_1, sum_R_input_1, Hmax1, sum_S_input_2, sum_E_input_2, sum_I_input_2, sum_H_input_2, sum_R_input_2, Hmax2);
             }
 
             if (file != NULL)
