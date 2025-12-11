@@ -97,8 +97,80 @@ CuSuite *vaccine_udrulning_suite(void)
 
     return suite;
 }
-/*
-// testcases af migrations effekt  ( lukket grænse = 0) (1 by uden smittede, får overførst smitte fra anden by)
+
+// testcases af migrations effekt (lukket grænse = 0) (1 by uden smittede, får overførst smitte fra anden by)
+void migrations_effekt_1(CuTest *tc)
+{
+    // Arrange - sætter testen op med det den skal bruge
+
+    SEIHRS_model tekstfil[2];
+
+    // Indlæser KBH.txt én gang
+    FILE *input = fopen("KBH.txt", "r");
+    CuAssertPtrNotNull(tc, input);
+    tekstfil[0] = indlaasFil(input);
+    fclose(input);
+
+    // Indlæser AAU.txt én gang
+    FILE *input2 = fopen("AAU.txt", "r");
+    CuAssertPtrNotNull(tc, input2);
+    tekstfil[1] = indlaasFil(input2);
+    fclose(input2);
+
+    FILE *testfile3 = fopen("test_output3.txt", "w");
+    CuAssertPtrNotNull(tc, testfile3);
+
+    // Act - kalder den funktion der skal testet
+    simulerEpidemi(
+        tekstfil,
+        1, // SIR
+        0, // ingen app
+        0, // vaccine fra
+        2, // 2 inputfiler
+        testfile3,
+        1, // 1 simulering
+        0, // deterministisk
+        0  // ingen terminalprint
+    );
+
+    fclose(testfile3);
+
+    // Assert - Nu åbner vi filen igen og tjekker resultatet
+    testfile3 = fopen("test_output3.txt", "r");
+    CuAssertPtrNotNull(tc, testfile3);
+
+    char line[256];
+    int day;
+    double S1, I1, R1, S2, I2, R2;
+
+    int smitteOpstaar = 0;
+
+    while (fgets(line, sizeof(line), testfile3))
+    {
+        // Matcher linjer med 7 tal (som SIR-output skriver)
+        if (sscanf(line, "%d %lf %lf %lf %lf %lf %lf",
+                   &day, &S1, &I1, &R1, &S2, &I2, &R2) == 7)
+        {
+            if (I2 > 0.0)
+            {
+                smitteOpstaar = 1;
+                break;
+            }
+        }
+    }
+    fclose(testfile3);
+
+    // forventning
+    CuAssertTrue(tc, smitteOpstaar == 1); // forventer at der bliver overført inficerede folk til Aalborg og at I derfor vokser
+}
+// testsuite af testcases af migrationseffekt
+CuSuite *migration_suite(void)
+{
+    CuSuite *suite = CuSuiteNew();
+    SUITE_ADD_TEST(suite, migrations_effekt_1);
+
+    return suite;
+}
 
 // testsuite af testcases af migrations effekt
 
@@ -109,5 +181,3 @@ CuSuite *vaccine_udrulning_suite(void)
 // testcases af stokastisk simulering uden vaccine og app
 
 // testsuites af test af stokastisk simulering
-
-*/

@@ -24,5 +24,6 @@ void lavGnuplotScript(const char *scriptFile, const char *dataFile, int numRepli
 void lavEnkeltGnuplotScript(const char *scriptFile, const char *dataFile, int model_type, int valg_input);
 
 CuSuite *vaccine_udrulning_suite(void);
+CuSuite *migration_suite(void);
 
 #endif

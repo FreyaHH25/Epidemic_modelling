@@ -1,4 +1,5 @@
 #include "epid.h"
+#include "CuTest.h"
 
 #include <stdio.h>
 #include <string.h>
