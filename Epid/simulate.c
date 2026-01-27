@@ -49,7 +49,7 @@ void simulerEpidemi(SEIHRS_model *tekstfil_orig, int model_type, int use_app, in
 {
     SEIHRS_model tekstfil[2];
 
-    tekstfil[0] = tekstfil_orig[0];
+    tekstfil[0] = tekstfil_orig[0]; // vi laver en copi
     if (valg_input == 2)
         tekstfil[1] = tekstfil_orig[1];
 
