@@ -47,7 +47,7 @@ long poisson(double lambda)
 // Hovedsimulering for én eller begge filer
 void simulerEpidemi(SEIHRS_model *tekstfil_orig, int model_type, int use_app, int use_vaccine, int valg_input, FILE *file, int replicate_num, int is_stochastic, int print_to_terminal)
 {
-    SEIHRS_model tekstfil[2];
+    SEIHRS_model tekstfil[2]; // struct-array som indeholder 2 elementer, med andre ord indeholder to structs
 
     tekstfil[0] = tekstfil_orig[0]; // vi laver en copi
     if (valg_input == 2)
