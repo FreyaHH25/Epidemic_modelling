@@ -10,7 +10,7 @@
 // Brugermenu
 void brugerInput()
 {
-    SEIHRS_model tekstfil[2];
+    SEIHRS_model tekstfil[2]; // struct array
     SEIHRS_model tekstfil_orig[2];
 
     printf("\nDette er et program, der simulerer smittespredning!");
@@ -19,9 +19,9 @@ void brugerInput()
     char valg[8];
     printf("\nVaelg model (SIR, SEIR, SEIHRS): ");
 
-    scanf(" %7s", valg);
+    scanf(" %7s", valg); // scanner de første 7 pladser i array'et (format specifier);" streng med maksimal bredte på 7"
     int model_type = 0;
-    if (strcmp(valg, "SIR") == 0 || strcmp(valg, "sir") == 0)
+    if (strcmp(valg, "SIR") == 0 || strcmp(valg, "sir") == 0) // strcmp = string compare; den sammenigner med det vi har skrevet;
     {
         model_type = 1;
     }
@@ -64,11 +64,11 @@ void brugerInput()
         exit(EXIT_FAILURE);
     }
 
-    tekstfil[0] = indlaasFil(input_fil_1);
-    tekstfil_orig[0] = tekstfil[0];
+    tekstfil[0] = indlaasFil(input_fil_1); // tager ovenstående fil, indlæser og sætter den på første plads i array;
+    tekstfil_orig[0] = tekstfil[0];        // sætter data ind i et nyt array, vi ender emd at hvad to arrays med de samme
     fclose(input_fil_1);
 
-    if (valg_input == 2)
+    if (valg_input == 2) // hvis man har valgt 2 filer gør det den samme igen
     {
         char *filnavn2 = spoergOmFilnavn();
         FILE *input_fil_2 = fopen(filnavn2, "r");
@@ -131,7 +131,7 @@ void brugerInput()
         int use_app = 0, use_vaccine = 0;
         appOgVaccine(&use_app, &use_vaccine);
 
-        koerFlereKopier(tekstfil_orig, model_type, use_app, use_vaccine, numReplicates, valg_input);
+        koerFlereKopier(tekstfil_orig, model_type, use_app, use_vaccine, numReplicates, valg_input); // en funktion der senere kører flere gange
 
         printf("Simuleringen er faerdig. Data er gemt i stochastic_replicates.txt\n");
     }
@@ -143,7 +143,7 @@ void brugerInput()
 
 char *spoergOmFilnavn(void)
 {
-    static char filnavn[250];
+    static char filnavn[250]; // static char= en char der ikke ændrer sig; [250] den læser 250 karakterer i filen
 
     // Bed brugeren om filnavn
     printf("Upload en tekstfil (se evt skabelon: skabelon.seihr.txt)\n");
@@ -251,15 +251,15 @@ void lavGnuplotScript(const char *scriptFile, const char *dataFile, int numRepli
     fprintf(fp, "set key maxcols 5\n");
 
     // Definer farver
-    fprintf(fp, "set style line 1 lc rgb '#00FF00' lt 1 lw 1\n"); // Grøn for S
-    fprintf(fp, "set style line 2 lc rgb '#FFA500' lt 1 lw 1\n"); // Orange for E
-    fprintf(fp, "set style line 3 lc rgb '#FF0000' lt 1 lw 1\n"); // Rød for I
-    fprintf(fp, "set style line 4 lc rgb '#800080' lt 1 lw 1\n"); // Lilla for H
-    fprintf(fp, "set style line 5 lc rgb '#0000FF' lt 1 lw 1\n"); // Blå for R
-    fprintf(fp, "set style line 6 lc rgb '#009900' dt 3 lw 1\n"); // Grøn for S til input 2
-    fprintf(fp, "set style line 7 lc rgb '#996300' dt 3 lw 1\n"); // Orange for E til input 2
-    fprintf(fp, "set style line 8 lc rgb '#990000' dt 3 lw 1\n"); // Rød for I til input 2
-    fprintf(fp, "set style line 9 lc rgb '#4D004D' dt 3 lw 1\n"); // Lilla for H til input 2
+    fprintf(fp, "set style line 1 lc rgb '#00FF00' lt 1 lw 1\n");  // Grøn for S
+    fprintf(fp, "set style line 2 lc rgb '#FFA500' lt 1 lw 1\n");  // Orange for E
+    fprintf(fp, "set style line 3 lc rgb '#FF0000' lt 1 lw 1\n");  // Rød for I
+    fprintf(fp, "set style line 4 lc rgb '#800080' lt 1 lw 1\n");  // Lilla for H
+    fprintf(fp, "set style line 5 lc rgb '#0000FF' lt 1 lw 1\n");  // Blå for R
+    fprintf(fp, "set style line 6 lc rgb '#009900' dt 3 lw 1\n");  // Grøn for S til input 2
+    fprintf(fp, "set style line 7 lc rgb '#996300' dt 3 lw 1\n");  // Orange for E til input 2
+    fprintf(fp, "set style line 8 lc rgb '#990000' dt 3 lw 1\n");  // Rød for I til input 2
+    fprintf(fp, "set style line 9 lc rgb '#4D004D' dt 3 lw 1\n");  // Lilla for H til input 2
     fprintf(fp, "set style line 10 lc rgb '#000099' dt 3 lw 1\n"); // Blå for R til input 2
 
     // Plot baseret på valgte model
@@ -499,15 +499,15 @@ void lavEnkeltGnuplotScript(const char *scriptFile, const char *dataFile, int mo
     fprintf(fp, "set key maxcols 5\n");
 
     // Definer farver (solid for enkelt simulering)
-    fprintf(fp, "set style line 1 lc rgb '#00FF00' lt 1 lw 2\n"); // Grøn for S
-    fprintf(fp, "set style line 2 lc rgb '#FFA500' lt 1 lw 2\n"); // Orange for E
-    fprintf(fp, "set style line 3 lc rgb '#FF0000' lt 1 lw 2\n"); // Rød for I
-    fprintf(fp, "set style line 4 lc rgb '#800080' lt 1 lw 2\n"); // Lilla for H
-    fprintf(fp, "set style line 5 lc rgb '#0000FF' lt 1 lw 2\n"); // Blå for R
-    fprintf(fp, "set style line 6 lc rgb '#009900' dt 3 lw 1\n"); // Grøn for S til input 2
-    fprintf(fp, "set style line 7 lc rgb '#996300' dt 3 lw 1\n"); // Orange for E til input 2
-    fprintf(fp, "set style line 8 lc rgb '#990000' dt 3 lw 1\n"); // Rød for I til input 2
-    fprintf(fp, "set style line 9 lc rgb '#4D004D' dt 3 lw 1\n"); // Lilla for H til input 2
+    fprintf(fp, "set style line 1 lc rgb '#00FF00' lt 1 lw 2\n");  // Grøn for S
+    fprintf(fp, "set style line 2 lc rgb '#FFA500' lt 1 lw 2\n");  // Orange for E
+    fprintf(fp, "set style line 3 lc rgb '#FF0000' lt 1 lw 2\n");  // Rød for I
+    fprintf(fp, "set style line 4 lc rgb '#800080' lt 1 lw 2\n");  // Lilla for H
+    fprintf(fp, "set style line 5 lc rgb '#0000FF' lt 1 lw 2\n");  // Blå for R
+    fprintf(fp, "set style line 6 lc rgb '#009900' dt 3 lw 1\n");  // Grøn for S til input 2
+    fprintf(fp, "set style line 7 lc rgb '#996300' dt 3 lw 1\n");  // Orange for E til input 2
+    fprintf(fp, "set style line 8 lc rgb '#990000' dt 3 lw 1\n");  // Rød for I til input 2
+    fprintf(fp, "set style line 9 lc rgb '#4D004D' dt 3 lw 1\n");  // Lilla for H til input 2
     fprintf(fp, "set style line 10 lc rgb '#000099' dt 3 lw 1\n"); // Blå for R til input 2
 
     int baseA = 1; // Input 1 offset

@@ -25,10 +25,10 @@ long poisson(double lambda)
     if (lambda > 30.0)
     {
         // Normalapproksimation
-        double u1 = (double)rand() / RAND_MAX;
+        double u1 = (double)rand() / RAND_MAX; // boks-müller transformation; rand_max is the maximum værdien der kan returneres af max funktionen
         double u2 = (double)rand() / RAND_MAX;
         if (u1 < 1e-12)
-            u1 = 1e-12;
+            u1 = 1e-12; // det her vil sige hvis tallet er mindre end det givne, så bliver det  bare det
         double z = sqrt(-2.0 * log(u1)) * cos(2.0 * M_PI * u2);
         long val = (long)(lambda + sqrt(lambda) * z + 0.5);
         return val < 0 ? 0 : val;
@@ -47,9 +47,9 @@ long poisson(double lambda)
 // Hovedsimulering for én eller begge filer
 void simulerEpidemi(SEIHRS_model *tekstfil_orig, int model_type, int use_app, int use_vaccine, int valg_input, FILE *file, int replicate_num, int is_stochastic, int print_to_terminal)
 {
-    SEIHRS_model tekstfil[2];
+    SEIHRS_model tekstfil[2]; // struct-array som indeholder 2 elementer, med andre ord indeholder to structs
 
-    tekstfil[0] = tekstfil_orig[0];
+    tekstfil[0] = tekstfil_orig[0]; // vi laver en copi
     if (valg_input == 2)
         tekstfil[1] = tekstfil_orig[1];
 
@@ -194,7 +194,7 @@ void simulerEpidemi(SEIHRS_model *tekstfil_orig, int model_type, int use_app, in
                     float sigma_i_2 = tekstfil[1].sigma;
                     float h_i_2 = tekstfil[1].h * age_h[i];
 
-                    //  Input 1 - rate skaleret med dt
+                    //  Input 1 - rate skaleret med dt; med andre ord vi tilpasser raten til de smittede (hovedideen)
                     double rate_inf_1 = beta_i_1 * S_input_1[i] * total_I_input_1 / tekstfil[0].N;
                     long n_inf_1 = poisson(rate_inf_1 * dt);
                     long n_prog_1 = 0;
@@ -214,6 +214,7 @@ void simulerEpidemi(SEIHRS_model *tekstfil_orig, int model_type, int use_app, in
                         n_h_rec_1 = poisson((tekstfil[0].gamma) * H_input_1[i] * dt);
                         n_R_to_S_1 = poisson(age_modtagelig_igen[i] * R_input_1[i] * dt);
                     }
+                    // checker om seihr-gr er større end antallet overordenede personer, hvis det er tilfældet er det bare antallet personer
                     if (n_inf_1 > (long)S_input_1[i])
                         n_inf_1 = (long)S_input_1[i];
                     if (n_prog_1 > (long)E_input_1[i])
@@ -321,7 +322,7 @@ void simulerEpidemi(SEIHRS_model *tekstfil_orig, int model_type, int use_app, in
                         R_input_2[i] += -R_out_2 + R_out_1;
                     }
 
-                    // Beskyt mod negative værdier
+                    // Beskyt mod negative værdier; "fmaxf"= sammenligning mellem to tal
                     S_input_1[i] = fmaxf(S_input_1[i], 0.0f);
                     E_input_1[i] = fmaxf(E_input_1[i], 0.0f);
                     I_input_1[i] = fmaxf(I_input_1[i], 0.0f);
